@@ -1,19 +1,44 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, { Component, Fragment } from 'react';
+import { Header, Footer } from './components/layouts';
+import Exercises from './components/exercises';
+import { muscles, exercises } from './store';
 import './App.css';
 
 class App extends Component {
+
+  state = {
+    exercises
+  }
+
+  getExercisesByMuscles(){
+    return Object.entries(
+      this.state.exercises.reduce((exercises, exercise ) => {
+        const { muscles } = exercise 
+
+        exercises[muscles] = exercises[muscles] 
+          ? [...exercises[muscles] , exercise]
+          : [exercise]
+
+        return exercises
+      }, {})
+  )
+  }
+
   render() {
+    // console.log(this.getExercisesByMuscles())
+    const exercises = this.getExercisesByMuscles()
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <Fragment>
+        <Header />
+        
+        <Exercises 
+          exercises= {exercises}
+        />
+
+        <Footer 
+          muscles= {muscles}
+        />
+      </Fragment>
     );
   }
 }
